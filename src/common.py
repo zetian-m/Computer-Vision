@@ -10,6 +10,7 @@ import cv2
 import os 
 import numpy as np
 import logging
+import time
 import matplotlib.pyplot as plt
 
 def fun():
@@ -60,6 +61,15 @@ def convolution(image, kernel):
             resultImage[j][i] = np.sum(image[j:j+kernelSize, i:i+kernelSize] * kernel)
     
     return resultImage
+
+def stopwatchStart():
+    start = time.time()
+    return start
+
+def stopwatchStop(start):
+    stop = time.time()
+
+    return stop-start
 
 if __name__ == "__main__":
     #* Write the module test function here
