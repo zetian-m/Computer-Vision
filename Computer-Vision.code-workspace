@@ -8,7 +8,16 @@
 		"better-comments.multilineComments": true,
 		"better-comments.highlightPlainText": true,
 		"better-comments.tags": [
-		
+			
+			{
+				"tag": "!!",
+				"color": "#ff0000",
+				"strikethrough": false,
+				"underline": false,
+				"backgroundColor": "transparent",
+				"bold": false,
+				"italic": false
+			},
 			{
 			  "tag": "+",
 			  "color": "#03fc62",
