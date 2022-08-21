@@ -4,7 +4,7 @@ import numpy as np
 import common as CO
 
 def creatSobelKernel(kernelSize):
-
+    #todo: Generate the kernel automaticlly
     kernelY = []
     kernelX = []
 
@@ -28,8 +28,8 @@ def creatSobelKernel(kernelSize):
                                 [2, 8, 12, 8, 2],
                                 [1, 4, 6, 4, 1]])
 
-
-    kernel_dict = {"SOBEL_X": kernelX, "SOBEL_Y": kernelY}
+    
+    #ernel_dict = {"SOBEL_X": kernelX, "SOBEL_Y": kernelY}
 
     return kernelX, kernelY
 
