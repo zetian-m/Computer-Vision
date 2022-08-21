@@ -18,8 +18,8 @@ def creatGaussKernel(kernelSize, sigma):
     gaussKsernel = (1/(2*math.pi*sigma**2)) * np.exp( (-1) * ((XX**2 + YY**2) / (2 * sigma**2)) )
 
     #* plot the kernel
-    plt.imshow(gaussKsernel, interpolation='none', cmap='gray')
-    plt.show()
+    """plt.imshow(gaussKsernel, interpolation='none', cmap='gray')
+    plt.show()"""
     
 
     #todo: Normalisation
