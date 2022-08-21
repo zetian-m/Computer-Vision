@@ -72,6 +72,7 @@ if __name__ == "__main__":
     #* Plotting
     plt.imshow(resultImg, interpolation='none', cmap='gray')
     plt.show()
+    
 
 
 
