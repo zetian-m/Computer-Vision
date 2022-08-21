@@ -56,11 +56,18 @@ if __name__ == "__main__":
 
     originalImg = CO.loadImage('Picture_Crossing_noise_0_pixelCnt_128_featureCnt_5.bmp')
 
+    
     #* GAUSS filtering
+    timeStart = CO.stopwatchStart()
     gaussKernel, resultImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA)
+    timeGaussFilter = CO.stopwatchStop(timeStart)
+    print("Gauss Filter needed:", timeGaussFilter)
 
     #* SOBEL filtering
+    timeStart = CO.stopwatchStart()
     resultImg = SOF.sobelFilter(originalImg, SOFCONST.KERNELSIZE)
+    timeSobelFilter = CO.stopwatchStop(timeStart)
+    print("Sobel Filter needed:", timeSobelFilter)
 
     #* Plotting
     plt.imshow(resultImg, interpolation='none', cmap='gray')
