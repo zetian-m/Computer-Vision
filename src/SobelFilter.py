@@ -42,7 +42,13 @@ def sobelFilter(originalImg, kernelSize, convMethod=0):
 
     resultImg = np.sqrt(Gx**2 + Gy**2)
 
-    return resultImg
+    Gx = Gx.astype(np.uint8)
+    Gy = Gy.astype(np.uint8)
+    resultImg = resultImg.astype(np.uint8)
+
+    return Gx, Gy, resultImg
+
+
 
 if __name__ == "__main__":
     #* Write the module test function here

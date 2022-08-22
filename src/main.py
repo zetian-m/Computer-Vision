@@ -1,6 +1,7 @@
 import common as CO
 import GaussFilter as GAUSF
 import SobelFilter as SOF
+import CannyFilter as CANF
 import matplotlib.pyplot as plt
 import sys
 import logging
@@ -51,7 +52,7 @@ class _SOBELFILCONST(object):
 class _PATHCONST(object):
     @constant
     def IMGINPUT():
-        return 'Picture_Crossing_noise_30_pixelCnt_65_featureCnt_10.bmp'
+        return 'Picture_Crossing_noise_0_pixelCnt_128_featureCnt_5.bmp'
 #############################################
 #                                           #
 #              End of Constants             #
@@ -77,13 +78,17 @@ if __name__ == "__main__":
 
     #* SOBEL filtering
     timeStart = CO.stopwatchStart()
-    resultImg = SOF.sobelFilter(originalImg, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+    sobelGx, sobelGy, resultImg = SOF.sobelFilter(originalImg, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
     timeSobelFilter = CO.stopwatchStop(timeStart)
     print("Sobel Filter needed:", timeSobelFilter)
 
+    timeStart = CO.stopwatchStart()
+    resultImg = CANF.cannyFilter(originalImg, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+    print(resultImg)
+
     #* Plotting
-    plt.imshow(resultImg, interpolation='none', cmap='gray')
-    plt.show()
+    #plt.imshow(resultImg, interpolation='none', cmap='gray')
+    #plt.show()
     
 
 

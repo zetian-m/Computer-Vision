@@ -81,7 +81,7 @@ def convolution2D(image, kernel, convMethod):
         print("Convolution Method not valid")
 
     #* change data format
-    resultImage = resultImage.astype(np.uint8)
+    #resultImage = resultImage.astype(np.uint8)
 
     return resultImage
 
