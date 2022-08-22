@@ -1,3 +1,4 @@
+from email.errors import BoundaryError
 from PIL import Image
 import cv2
 import os 
@@ -5,6 +6,7 @@ import numpy as np
 import logging
 import time
 import matplotlib.pyplot as plt
+from scipy import signal
 
 #*
 #?
@@ -33,7 +35,7 @@ def loadImage(imgFileName):
 
     return original_image
 
-def convolution(image, kernel):
+def convolution2D(image, kernel, convMethod):
 
     #* Get Size of image and kernel
     imgSizeX, imgSizeY = image.shape
@@ -56,12 +58,20 @@ def convolution(image, kernel):
 
     #* Notice that np.zeros() has different position of X and Y in input
     resultImage = np.zeros((resultSizeY,resultSizeX))
-
-    for i in range(resultSizeX):
-        for j in range(resultSizeY):
-            resultImage[j][i] = np.sum(image[j:j+kernelSize, i:i+kernelSize] * kernel)
+    if convMethod == 0:
+        for i in range(resultSizeX):
+            for j in range(resultSizeY):
+                resultImage[j][i] = np.sum(image[j:j+kernelSize, i:i+kernelSize] * kernel)
     
+    elif convMethod == 1:
+        resultImage = signal.convolve2d(image, kernel, boundary='symm', mode='same')
+
+    else:
+        print("Convolution Method not valid")
+
+
     return resultImage
+
 
 def stopwatchStart():
     start = time.time()
