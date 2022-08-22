@@ -33,12 +33,12 @@ def creatSobelKernel(kernelSize):
 
     return kernelX, kernelY
 
-def sobelFilter(originalImg, kernelSize):
+def sobelFilter(originalImg, kernelSize, convMethod=0):
 
     sobelKernelX, sobelKernelY = creatSobelKernel(kernelSize)
     
-    Gx = CO.convolution(originalImg, sobelKernelX)
-    Gy = CO.convolution(originalImg, sobelKernelY)
+    Gx = CO.convolution2D(originalImg, sobelKernelX, convMethod)
+    Gy = CO.convolution2D(originalImg, sobelKernelY, convMethod)
 
     resultImg = np.sqrt(Gx**2 + Gy**2)
 

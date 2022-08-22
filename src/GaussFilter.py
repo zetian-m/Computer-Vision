@@ -6,7 +6,7 @@ import logging
 
 def creatGaussKernel(kernelSize, sigma):
 
-    gaussKsernel = np.zeros((kernelSize, kernelSize))
+    gaussKernel = np.zeros((kernelSize, kernelSize))
 
     kernelHalfSize = int(kernelSize/2)
 
@@ -15,24 +15,25 @@ def creatGaussKernel(kernelSize, sigma):
     XX,YY = np.meshgrid(xArray, yArray)
 
     #creat kernel with the coordinats from kernelSize
-    gaussKsernel = (1/(2*math.pi*sigma**2)) * np.exp( (-1) * ((XX**2 + YY**2) / (2 * sigma**2)) )
+    gaussKernel = (1/(2*math.pi*sigma**2)) * np.exp( (-1) * ((XX**2 + YY**2) / (2 * sigma**2)) )
 
     #* plot the kernel
-    """plt.imshow(gaussKsernel, interpolation='none', cmap='gray')
+    """plt.imshow(gaussKernel, interpolation='none', cmap='gray')
     plt.show()"""
     
 
     #todo: Normalisation
     #todo: is this the right way?
     #kernel = kernel/np.linalg.norm(kernel)
-    gaussKsernel /= np.sum(gaussKsernel)
+    gaussKernel /= np.sum(gaussKernel)
 
-    return gaussKsernel
+    return gaussKernel
 
-def gaussFilter(originalImg, kernelSize, sigma):
+def gaussFilter(originalImg, kernelSize, sigma, convMethod=0):
 
     gaussKernel = creatGaussKernel(kernelSize, sigma)
-    resultImg = CO.convolution(originalImg, gaussKernel)
+    
+    resultImg = CO.convolution2D(originalImg, gaussKernel, convMethod)
 
     return gaussKernel, resultImg
 

@@ -22,6 +22,11 @@ def constant(f):
             return f()
     return property(fget, fset)
 
+class _CONVCONST(object):
+    @constant
+    def CONVMETHOD():
+        return 1
+
 class _GAUSSFILCONST(object):
     """ Constants for using gauss filter
     Returns:
@@ -29,10 +34,10 @@ class _GAUSSFILCONST(object):
     """
     @constant
     def SIGMA():
-        return 3
+        return 5
     @constant
     def KERNELSIZE():
-        return 3
+        return 33
 
 class _SOBELFILCONST(object):
     """ Constants for using sobel filter
@@ -42,6 +47,11 @@ class _SOBELFILCONST(object):
     @constant
     def KERNELSIZE():
         return 3
+
+class _PATHCONST(object):
+    @constant
+    def IMGINPUT():
+        return 'Picture_Crossing_noise_30_pixelCnt_65_featureCnt_10.bmp'
 #############################################
 #                                           #
 #              End of Constants             #
@@ -53,19 +63,21 @@ class _SOBELFILCONST(object):
 if __name__ == "__main__":
     GAUSSFCONST = _GAUSSFILCONST()
     SOFCONST = _SOBELFILCONST()
+    CONVCONST = _CONVCONST()
+    PATHCONST = _PATHCONST()
 
-    originalImg = CO.loadImage('Picture_Crossing_noise_0_pixelCnt_128_featureCnt_5.bmp')
+    originalImg = CO.loadImage(PATHCONST.IMGINPUT)
 
     
     #* GAUSS filtering
     timeStart = CO.stopwatchStart()
-    gaussKernel, resultImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA)
+    gaussKernel, resultImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
     timeGaussFilter = CO.stopwatchStop(timeStart)
     print("Gauss Filter needed:", timeGaussFilter)
 
     #* SOBEL filtering
     timeStart = CO.stopwatchStart()
-    resultImg = SOF.sobelFilter(originalImg, SOFCONST.KERNELSIZE)
+    resultImg = SOF.sobelFilter(originalImg, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
     timeSobelFilter = CO.stopwatchStop(timeStart)
     print("Sobel Filter needed:", timeSobelFilter)
 
