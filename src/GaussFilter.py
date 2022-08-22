@@ -32,7 +32,7 @@ def creatGaussKernel(kernelSize, sigma):
 def gaussFilter(originalImg, kernelSize, sigma, convMethod=0):
 
     gaussKernel = creatGaussKernel(kernelSize, sigma)
-    
+
     resultImg = CO.convolution2D(originalImg, gaussKernel, convMethod)
 
     return gaussKernel, resultImg

@@ -36,7 +36,17 @@ def loadImage(imgFileName):
     return original_image
 
 def convolution2D(image, kernel, convMethod):
+    """ This is the common function for doing convolution 2D.
 
+    Args:
+        image (_intMatrix_):        Image Matrix
+        kernel (_floatMatrix_):     Filter kernel
+        convMethod (_int_):         0 for doing conv with own func
+                                    1 for doing conv with python built in lib
+
+    Returns:
+        resultImg (_intMatrix_):    The new image after convolution
+    """
     #* Get Size of image and kernel
     imgSizeX, imgSizeY = image.shape
     kernelSizeX, kernelSizeY = kernel.shape
@@ -58,6 +68,7 @@ def convolution2D(image, kernel, convMethod):
 
     #* Notice that np.zeros() has different position of X and Y in input
     resultImage = np.zeros((resultSizeY,resultSizeX))
+
     if convMethod == 0:
         for i in range(resultSizeX):
             for j in range(resultSizeY):
@@ -69,6 +80,8 @@ def convolution2D(image, kernel, convMethod):
     else:
         print("Convolution Method not valid")
 
+    #* change data format
+    resultImage = resultImage.astype(np.uint8)
 
     return resultImage
 
