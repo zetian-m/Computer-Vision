@@ -79,11 +79,53 @@ def nonMaximaSuppression(edgeGradient, pixelAngleRounded):
         
     return newEdgeGradient        
 
-    #todo: Take a 3x3 Matrix
-    #todo: check direction TOP, RIGHT, BOTTOM, LEFT
-    #todo: set 0 or keep value
-    pass
+def cannyThreshold(edgeGradient, thUpper, thLower):
+    gradientSizeX, gradientSizeY = edgeGradient.shape
+    pixelLowest = 255
+    for x in range (gradientSizeX):
+        for y in range (gradientSizeY):
+            pixelValue = edgeGradient.item((x,y))
 
+            if pixelValue >= thUpper:
+                if pixelValue < pixelLowest:
+                    pixelLowest = pixelValue
+                
+            elif pixelValue <= thLower:
+                pixelValue = 0
+
+            else:
+                pass
+
+            """if pixelValue > 0:
+                edgeGradient[x, y] = 255
+            else:
+                edgeGradient[x, y] = 0"""
+            edgeGradient[x,y] = pixelValue
+
+    #* Check if this pixel connects to a edge
+
+    #* Get the 3x3 submatrix surrounding
+
+    for y in range(gradientSizeY-2):
+        for x in range(gradientSizeX-2):
+
+            subEdgeGradient = edgeGradient[y:y+3, x:x+3]
+            centralPixelValue = subEdgeGradient.item((1,1))
+            if  centralPixelValue < thUpper and centralPixelValue > thLower:
+                connectedToEdge = False
+                for index, pixelValue in np.ndenumerate(subEdgeGradient) :
+                    if pixelValue >= thUpper and index != (1,1):
+                        connectedToEdge = True
+                    else:
+                        continue
+                if not connectedToEdge:
+                    edgeGradient[x, y] = 0
+
+              
+            else:
+                continue
+                
+    return edgeGradient
 
 
 
@@ -106,10 +148,18 @@ def cannyFilter(inputImg, sigma, sobelKernelSize = 3, convMethod = 0):
 
     #* Step 3: Application of Non-maxima suppression
     EdgeGradient = nonMaximaSuppression(EdgeGradient, pixelAngleRounded)
+    plt.imshow(EdgeGradient, interpolation='none', cmap='gray')
+    plt.show()
+    #* Step 4: Thresholding
+    EdgeGradient = cannyThreshold(EdgeGradient, 220, 190)
+
+
 
     #sobelPixelAngleRounded = sobelPixelAngleRounded.astype(np.uint8)
     plt.imshow(EdgeGradient, interpolation='none', cmap='gray')
     plt.show()
+
+    return EdgeGradient
 
 
 if __name__ == "__main__":

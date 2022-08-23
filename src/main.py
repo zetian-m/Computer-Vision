@@ -5,6 +5,7 @@ import CannyFilter as CANF
 import matplotlib.pyplot as plt
 import sys
 import logging
+import cv2
 
 #############################################
 #                                           #
@@ -35,10 +36,13 @@ class _GAUSSFILCONST(object):
     """
     @constant
     def SIGMA():
-        return 5
+        #9.3
+        #0.93
+        #1
+        return 9.3
     @constant
     def KERNELSIZE():
-        return 33
+        return 3
 
 class _SOBELFILCONST(object):
     """ Constants for using sobel filter
@@ -47,7 +51,7 @@ class _SOBELFILCONST(object):
     """
     @constant
     def KERNELSIZE():
-        return 3
+        return 5
 
 class _PATHCONST(object):
     @constant
@@ -85,6 +89,14 @@ if __name__ == "__main__":
     timeStart = CO.stopwatchStart()
     resultImg = CANF.cannyFilter(originalImg, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
     print(resultImg)
+
+    cv2.imshow("YYY", resultImg)
+    
+    cv2.imshow("XXX",cv2.Canny(originalImg, 220,190))
+    plt.imshow(cv2.Canny(originalImg, 220,190), interpolation='none', cmap='gray')
+    #plt.imshow(resultImg, interpolation='none', cmap='gray')
+    plt.show()
+    cv2.waitKey()
 
     #* Plotting
     #plt.imshow(resultImg, interpolation='none', cmap='gray')

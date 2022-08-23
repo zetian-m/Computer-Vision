@@ -31,7 +31,10 @@ def loadImage(imgFileName):
     print(imagePath)
 
     #* Could also use the cv2 function instead
-    original_image = plt.imread(imagePath, plt.gray)
+    try:
+        original_image = plt.imread(imagePath, plt.gray)
+    except:
+        original_image = cv2.imread(imagePath, cv2.IMREAD_GRAYSCALE)
 
     return original_image
 

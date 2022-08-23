@@ -25,7 +25,7 @@ def creatGaussKernel(kernelSize, sigma):
     #todo: Normalisation
     #todo: is this the right way?
     #kernel = kernel/np.linalg.norm(kernel)
-    gaussKernel /= np.sum(gaussKernel)
+    #gaussKernel /= np.sum(gaussKernel)
 
     return gaussKernel
 
@@ -37,7 +37,7 @@ def gaussFilter(originalImg, kernelSize, sigma, convMethod=0):
 
     gaussKernel = gaussKernel.astype(np.uint8)
     resultImg = resultImg.astype(np.uint8)
-    
+
     return gaussKernel, resultImg
 
 if __name__ == '__main__':
