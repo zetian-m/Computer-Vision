@@ -58,14 +58,15 @@ def nonMaximaSuppression(edgeGradient, pixelAngleRounded):
                 #* compare the central gradient value with TOP and BOTTOM
                 pixelGradientList = subEdgeGradient[1:2, 0:3]
 
+                #* search for max and discard other value
                 pixelGradientList = setPixelGradientValue(pixelGradientList)
 
                 subEdgeGradient[1:2, 0:3] = pixelGradientList
 
             elif centralPixelAngle == LEFT or centralPixelAngle == RIGHT:
-
+                #* compare the cantral gradient value with LEFT and RIGHT
                 pixelGradientList = subEdgeGradient[0:3, 1:2]
-
+                #* search for max and discard other value
                 pixelGradientList = setPixelGradientValue(pixelGradientList)
 
                 subEdgeGradient[0:3, 1:2] = pixelGradientList
@@ -80,46 +81,67 @@ def nonMaximaSuppression(edgeGradient, pixelAngleRounded):
     return newEdgeGradient        
 
 def cannyThreshold(edgeGradient, thUpper, thLower):
+
     gradientSizeX, gradientSizeY = edgeGradient.shape
-    pixelLowest = 255
+
+    #* go throught every pixel in the edgeGardient
     for x in range (gradientSizeX):
         for y in range (gradientSizeY):
+
+            #* Get the central pixel value
             pixelValue = edgeGradient.item((x,y))
 
+            
             if pixelValue >= thUpper:
-                if pixelValue < pixelLowest:
-                    pixelLowest = pixelValue
-                
+                #* Value above threshold upper -> take it as a edge
+                pixelValue = 255
             elif pixelValue <= thLower:
+                #* Value under threshold lower -> discard it
                 pixelValue = 0
-
             else:
+                #* Value between threshold upper and lower -> take it and check connectivity
                 pass
 
-            """if pixelValue > 0:
-                edgeGradient[x, y] = 255
-            else:
-                edgeGradient[x, y] = 0"""
+
+            #* Set the pixel value
             edgeGradient[x,y] = pixelValue
 
     #* Check if this pixel connects to a edge
-
-    #* Get the 3x3 submatrix surrounding
-
+    plt.imshow(edgeGradient, interpolation='none', cmap='gray')
+    plt.show()
+    
     for y in range(gradientSizeY-2):
         for x in range(gradientSizeX-2):
-
+            #* Get the 3x3 submatrix surrounding
             subEdgeGradient = edgeGradient[y:y+3, x:x+3]
+            #* Get the central pixel value
             centralPixelValue = subEdgeGradient.item((1,1))
+            
             if  centralPixelValue < thUpper and centralPixelValue > thLower:
+                #* only consider the value that between threshold
                 connectedToEdge = False
+                
                 for index, pixelValue in np.ndenumerate(subEdgeGradient) :
-                    if pixelValue >= thUpper and index != (1,1):
+                    
+                    if pixelValue >= thUpper:
+                        #* Check if there is any pixel value larger than threshold upper
+                        #* but this pixel is not the central pixel
                         connectedToEdge = True
+                        break
                     else:
                         continue
+                
                 if not connectedToEdge:
-                    edgeGradient[x, y] = 0
+                    subEdgeGradient[1, 1] = 0
+                    
+                else:
+                    subEdgeGradient[1, 1] = 255
+                    
+                #* Change value of edgeGradient
+                edgeGradient[y:y+3, x:x+3] = subEdgeGradient
+                
+
+                
 
               
             else:
