@@ -4,6 +4,9 @@ import SobelFilter as SOBF
 import matplotlib.pyplot as plt
 import numpy as np
 
+#* This canny filter was implemented with this website as tutorial: 
+#* https://pyimagesearch.com/2021/05/12/opencv-edge-detection-cv2-canny/
+
 def nearestQuarter(ang):
     # round the angle to a quarter
     return (((round(((ang)/np.pi)/0.5))/4)*(2*np.pi)) % (2*np.pi)
