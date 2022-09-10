@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import common as CO
 import logging
+import cv2
 
 def creatGaussKernel(kernelSize, sigma):
 
@@ -25,7 +26,17 @@ def creatGaussKernel(kernelSize, sigma):
     #todo: Normalisation
     #todo: is this the right way?
     #kernel = kernel/np.linalg.norm(kernel)
-    #gaussKernel /= np.sum(gaussKernel)
+    gaussKernel /= np.sum(gaussKernel)
+    
+
+    #* Uncomment this for proving gauss kernel with opencv
+    # plt.imshow(gaussKernel, interpolation='none', cmap='gray')
+    # plt.show()
+    # gaussKernel = cv2.getGaussianKernel(kernelSize, 1)
+    # gaussKernel = gaussKernel * gaussKernel.transpose(1,0)
+    # plt.imshow(gaussKernel, interpolation='none', cmap='gray')
+    # plt.show()
+    
 
     return gaussKernel
 
