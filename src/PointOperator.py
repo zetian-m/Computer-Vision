@@ -1,7 +1,10 @@
 import cv2 as cv
 import numpy as np
+
+
+
 def imageLighter(image, add_light):
-    newImg = image
+    newImg = np.zeros(image.shape)
     for r in range(image.shape[0]):
         for c in range(image.shape[1]):
             pixelValue = image[r,c]

@@ -17,7 +17,7 @@ if __name__ == "__main__":
     dft_shift = np.fft.fftshift(dft)
 
     # filter function
-    
+
 
     #magnitude_spectrum = cv2.magnitude(dft[:,:,0],dft[:,:,1])
     magnitude_spectrum = 20*np.log(cv2.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]))
