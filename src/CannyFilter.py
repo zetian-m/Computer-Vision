@@ -49,8 +49,8 @@ def nonMaximaSuppression(edgeGradient, pixelAngleRounded):
     for y in range(gradientSizeY-2):
         for x in range(gradientSizeX-2):
             #* get 3x3 submatrix for nonMaximaSuppression
-            subEdgeGradient = edgeGradient[y:y+3, x:x+3]
-            subPixelAngleRounded = pixelAngleRounded[y:y+3, x:x+3]
+            subEdgeGradient = edgeGradient[x:x+3, y:y+3]
+            subPixelAngleRounded = pixelAngleRounded[x:x+3, y:y+3]
 
             #* get the central point value -> angle and gradient
             centralPixelAngle = subPixelAngleRounded.item((1,1))
@@ -110,8 +110,8 @@ def cannyThreshold(edgeGradient, thUpper, thLower):
             edgeGradient[x,y] = pixelValue
 
     #* Check if this pixel connects to a edge
-    plt.imshow(edgeGradient, interpolation='none', cmap='gray')
-    plt.show()
+    #plt.imshow(edgeGradient, interpolation='none', cmap='gray')
+    #plt.show()
     
     for y in range(gradientSizeY-2):
         for x in range(gradientSizeX-2):
@@ -152,8 +152,6 @@ def cannyThreshold(edgeGradient, thUpper, thLower):
                 
     return edgeGradient
 
-
-
 def cannyFilter(inputImg, sigma, sobelKernelSize = 3, convMethod = 0):
     GAUSKERNELSIZE = 5
 
@@ -166,23 +164,21 @@ def cannyFilter(inputImg, sigma, sobelKernelSize = 3, convMethod = 0):
 
     #* Step 2.2: Calculate Angle of each pixel 
     pixelAngle = np.arctan2(Gy, Gx)
-    print(pixelAngle)
+    #print(pixelAngle)
     
     #* Step 2.3: Round all angles to a quater of a circle (0, 0.5*pi, pi, 1,5*pi)
     pixelAngleRounded = roundAngle(pixelAngle)
 
     #* Step 3: Application of Non-maxima suppression
     EdgeGradient = nonMaximaSuppression(EdgeGradient, pixelAngleRounded)
-    plt.imshow(EdgeGradient, interpolation='none', cmap='gray')
-    plt.show()
+    #plt.imshow(EdgeGradient, interpolation='none', cmap='gray')
+    #plt.show()
     #* Step 4: Thresholding
     EdgeGradient = cannyThreshold(EdgeGradient, 220, 190)
 
-
-
     #sobelPixelAngleRounded = sobelPixelAngleRounded.astype(np.uint8)
-    plt.imshow(EdgeGradient, interpolation='none', cmap='gray')
-    plt.show()
+    #plt.imshow(EdgeGradient, interpolation='none', cmap='gray')
+    #plt.show()
 
     return EdgeGradient
 
