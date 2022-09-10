@@ -10,8 +10,8 @@ import PointOperator as po
 
 if __name__ == "__main__":
 
-    img = com.loadImage("test.bmp")
-    #img = po.imageLighter(img, 1)
+    img = com.loadImage('Picture_Crossing_noise_0_pixelCnt_128_featureCnt_5.bmp')
+    po.imageLighter(img, 1)
 
     dft = cv2.dft(np.float32(img), flags = cv2.DFT_COMPLEX_OUTPUT)
     dft_shift = np.fft.fftshift(dft)

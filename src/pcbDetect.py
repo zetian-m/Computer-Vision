@@ -73,6 +73,7 @@ if __name__ == "__main__":
     PATHCONST = _PATHCONST()
 
     originalImg = CO.loadImage(PATHCONST.IMGINPUT)
+    originalImg = POP.imageLighter(originalImg, 1)
 
     kontrassImg = POP.imageKontrass(originalImg, 0.5)
 
