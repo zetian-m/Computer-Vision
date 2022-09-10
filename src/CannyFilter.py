@@ -37,6 +37,7 @@ def nonMaximaSuppression(edgeGradient, pixelAngleRounded):
 
     #* Because of NMS, the value in a 3x3 matrix will be searched. 
     #* Beginns with 1 and ends with numCols-1
+
     for r in range(1, numRows-1):
         for c in range(1, numCols-1):
 
@@ -66,6 +67,8 @@ def nonMaximaSuppression(edgeGradient, pixelAngleRounded):
 
 def cannyThreshold(edgeGradient, thUpper, thLower):
 
+
+
     numRows, numCols = edgeGradient.shape
     newEdgeGradient = np.zeros(edgeGradient.shape)
     #* go throught every pixel in the edgeGardient
@@ -81,6 +84,7 @@ def cannyThreshold(edgeGradient, thUpper, thLower):
                 #* Value under threshold lower -> discard it
                 centralPixelValue = 0
             else:
+                centralPixelValue = 0
                 #* Value between threshold upper and lower -> take it and check connectivity
                 pass
 

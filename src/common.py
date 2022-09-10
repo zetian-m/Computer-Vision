@@ -85,7 +85,7 @@ def convolution2D(image, kernel, convMethod):
     elif convMethod == 2:
         for j in range(0, resultSizeY):
             for i in range(0, resultSizeX):
-                resultImage = np.fft.irfft(np.dot(np.fft.rfft2(image[i:i+kernelSizeX, j:j+kernelSizeY]), np.fft.rfft2(kernel)))
+                resultImage = np.fft.irfft(np.dot(np.fft.rfft2(image[i:i+kernelSizeX, j:j+kernelSizeY]) * np.fft.rfft2(kernel)))
 
     else:
         print("Convolution Method not valid")

@@ -16,19 +16,16 @@ def threshold(img, upperThreshold, lowerThreshold, thMethod=1):
 
     #* Binary Threshold
     elif thMethod == 2:
-        for r in range(0, numRows):
-            for c in range(0, numCols):
-                if img[r,c] > upperThreshold:
-                    imgThreshold[r,c] = 255
-                else:
-                    imgThreshold[r,c] = 0
-
+        imgThreshold = np.zeros(img.shape)
+        row_max, col_max = np.where(img > upperThreshold)
+        imgThreshold[row_max, col_max] = 255
+        
+                
+    #* Pixelvalue < lowerThreshold -> 0
+    #* Pixelvalue = Pixelvalue
     elif thMethod == 3:
-        for r in range(0, numRows):
-            for c in range(0, numCols):
-                if img[r,c] < lowerThreshold:
-                    imgThreshold[r,c] = 0
-                else:
-                    continue
+
+        row_max, col_max = np.where(img < lowerThreshold)
+        imgThreshold[row_max, col_max] = 0
     
     return imgThreshold
