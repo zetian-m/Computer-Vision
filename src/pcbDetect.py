@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     originalImg = CO.loadImage(PATHCONST.IMGINPUT)
 
-    kontrassImg = POP.imageKontrass(originalImg, 2)
+    kontrassImg = POP.imageKontrass(originalImg, 0.5)
 
     #* SOBEL filtering
     timeStart = CO.stopwatchStart()
