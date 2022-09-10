@@ -57,7 +57,7 @@ class _SOBELFILCONST(object):
 class _PATHCONST(object):
     @constant
     def IMGINPUT():
-        return '\\PCB\\LADEIC_MICRO_TOP1.bmp'
+        return '\\PCB\\BMS_BOTTOM2.bmp'
 #############################################
 #                                           #
 #              End of Constants             #
@@ -74,39 +74,29 @@ if __name__ == "__main__":
 
     originalImg = CO.loadImage(PATHCONST.IMGINPUT)
 
-    kontrassImg = POP.imageKontrass(originalImg, 1.5)
-    plt.imshow(kontrassImg, interpolation='none', cmap='gray')
-    plt.show()
-
-    #* GAUSS filtering
-    timeStart = CO.stopwatchStart()
-    gaussKernel, resultImg = GAUSF.gaussFilter(kontrassImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
-    timeGaussFilter = CO.stopwatchStop(timeStart)
-    print("Gauss Filter needed:", timeGaussFilter)
-    plt.imshow(resultImg, interpolation='none', cmap='gray')
-    plt.show()
+    kontrassImg = POP.imageKontrass(originalImg, 2)
 
     #* SOBEL filtering
     timeStart = CO.stopwatchStart()
-    sobelGx, sobelGy, resultImg = SOF.sobelFilter(resultImg, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+    sobelGx, sobelGy, sobelImg = SOF.sobelFilter(kontrassImg, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
     timeSobelFilter = CO.stopwatchStop(timeStart)
     print("Sobel Filter needed:", timeSobelFilter)
-    plt.imshow(resultImg, interpolation='none', cmap='gray')
-    plt.show()
-   
-    timeStart = CO.stopwatchStart()
-    resultImg = CANF.cannyFilter(originalImg, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
-    plt.imshow(resultImg, interpolation='none', cmap='gray')
-    plt.show()
-    resultImg = cv2.Canny(originalImg, 170,120)
-    #resultImg = CANF.cannyFilter(originalImg, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
-    
 
-    #plt.imshow(resultImg, interpolation='none', cmap='gray')
-    plt.show()
-    cv2.waitKey()
+    timeStart = CO.stopwatchStart()
+    cannyImg = CANF.cannyFilter(kontrassImg, 60, 20, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+    timeSobelFilter = CO.stopwatchStop(timeStart)
+    print("Canny Filter needed:", timeSobelFilter)
 
     #* Plotting
+    plt.subplot(221),plt.imshow(originalImg,cmap = 'gray')
+    plt.title('imgOriginal'), plt.xticks([]), plt.yticks([])
+    plt.subplot(222),plt.imshow(kontrassImg,cmap = 'gray')
+    plt.title('img kontrass higher'), plt.xticks([]), plt.yticks([])
+    plt.subplot(223),plt.imshow(sobelImg,cmap = 'gray')
+    plt.title('imgSobel'), plt.xticks([]), plt.yticks([])
+    plt.subplot(224),plt.imshow(cannyImg,cmap = 'gray')
+    plt.title('imgCanny'), plt.xticks([]), plt.yticks([])
+    plt.show()
     #plt.imshow(resultImg, interpolation='none', cmap='gray')
     #plt.show()
     
