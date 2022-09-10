@@ -39,7 +39,7 @@ class _GAUSSFILCONST(object):
         #9.3
         #0.93
         #1
-        return 9.3
+        return 1
     @constant
     def KERNELSIZE():
         return 3
@@ -56,7 +56,7 @@ class _SOBELFILCONST(object):
 class _PATHCONST(object):
     @constant
     def IMGINPUT():
-        return 'Picture_Crossing_noise_0_pixelCnt_128_featureCnt_5.bmp'
+        return 'Picture_Crossing_noise_10_pixelCnt_65_featureCnt_9.bmp'
 #############################################
 #                                           #
 #              End of Constants             #
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     originalImg = CO.loadImage(PATHCONST.IMGINPUT)
 
     
-    #* GAUSS filtering
+    """#* GAUSS filtering
     timeStart = CO.stopwatchStart()
     gaussKernel, resultImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
     timeGaussFilter = CO.stopwatchStop(timeStart)
@@ -90,13 +90,22 @@ if __name__ == "__main__":
     resultImg = CANF.cannyFilter(originalImg, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
     print(resultImg)
 
+    cv2.imshow("YYY", resultImg)"""
+    resultImg = CANF.cannyFilter(originalImg, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+
+    opencvImg = cv2.Canny(originalImg, 220,190)
+
+    cv2.imshow("XXX", originalImg)
     cv2.imshow("YYY", resultImg)
-    
-    cv2.imshow("XXX",cv2.Canny(originalImg, 220,190))
-    plt.imshow(cv2.Canny(originalImg, 220,190), interpolation='none', cmap='gray')
-    #plt.imshow(resultImg, interpolation='none', cmap='gray')
-    plt.show()
+    cv2.imshow("zzz", opencvImg)
     cv2.waitKey()
+
+    """plt.imshow(resultImg, interpolation='none', cmap='gray')
+    plt.show()
+    plt.imshow(originalImg, interpolation='none', cmap='gray')
+    plt.show()
+    plt.imshow(opencvImg, interpolation='none', cmap='gray')
+    plt.show()"""
 
     #* Plotting
     #plt.imshow(resultImg, interpolation='none', cmap='gray')
