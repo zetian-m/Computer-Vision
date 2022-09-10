@@ -63,23 +63,21 @@ def convolution2D(image, kernel, convMethod):
     else:
         logging.warning("imgSizeX != imgSizeY")"""
 
-    if kernelSizeX == kernelSizeY:
-        kernelSize = kernelSizeX
-    else:
-        logging.warning("kernelSizeX != kernelSizeY")
+    #if kernelSizeX == kernelSizeY:
+    #    kernelSize = kernelSizeX
+    #else:
+    #    logging.warning("kernelSizeX != kernelSizeY")
     
     resultSizeX = imgSizeX - kernelSizeX + 1
     resultSizeY = imgSizeY - kernelSizeY + 1
-    print(resultSizeX, resultSizeY)
-    #* Notice that np.zeros() has different position of X and Y in input
-    resultImage = np.zeros((resultSizeY,resultSizeX))
+
+    #* Create result Image
+    resultImage = np.zeros((resultSizeX,resultSizeY))
 
     if convMethod == 0:
-        for j in range(resultSizeY):
-            for i in range(resultSizeX):
-                #print(j,i)
-                #print(image[j:j+kernelSize, i:i+kernelSize])
-                resultImage[j][i] = np.sum(image[j:j+kernelSize, i:i+kernelSize] * kernel)
+        for j in range(0, resultSizeY):
+            for i in range(0, resultSizeX):
+                resultImage[i][j] = np.sum(image[i:i+kernelSizeX, j:j+kernelSizeY] * kernel)
     
     elif convMethod == 1:
         resultImage = signal.convolve2d(image, kernel, boundary='symm', mode='same')
@@ -89,7 +87,7 @@ def convolution2D(image, kernel, convMethod):
 
     #* change data format
     #resultImage = resultImage.astype(np.uint8)
-
+    
     return resultImage
 
 
