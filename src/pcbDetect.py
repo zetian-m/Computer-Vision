@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import sys
 import logging
 import cv2
+import PointOperator as POP
 
 #############################################
 #                                           #
@@ -27,7 +28,7 @@ def constant(f):
 class _CONVCONST(object):
     @constant
     def CONVMETHOD():
-        return 0
+        return 1
 
 class _GAUSSFILCONST(object):
     """ Constants for using gauss filter
@@ -51,7 +52,7 @@ class _SOBELFILCONST(object):
     """
     @constant
     def KERNELSIZE():
-        return 5
+        return 3
 
 class _PATHCONST(object):
     @constant
@@ -73,10 +74,13 @@ if __name__ == "__main__":
 
     originalImg = CO.loadImage(PATHCONST.IMGINPUT)
 
-    
+    kontrassImg = POP.imageKontrass(originalImg, 1.5)
+    plt.imshow(kontrassImg, interpolation='none', cmap='gray')
+    plt.show()
+
     #* GAUSS filtering
     timeStart = CO.stopwatchStart()
-    gaussKernel, resultImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
+    gaussKernel, resultImg = GAUSF.gaussFilter(kontrassImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
     timeGaussFilter = CO.stopwatchStop(timeStart)
     print("Gauss Filter needed:", timeGaussFilter)
     plt.imshow(resultImg, interpolation='none', cmap='gray')
@@ -84,18 +88,20 @@ if __name__ == "__main__":
 
     #* SOBEL filtering
     timeStart = CO.stopwatchStart()
-    sobelGx, sobelGy, resultImg = SOF.sobelFilter(originalImg, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+    sobelGx, sobelGy, resultImg = SOF.sobelFilter(resultImg, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
     timeSobelFilter = CO.stopwatchStop(timeStart)
     print("Sobel Filter needed:", timeSobelFilter)
-
+    plt.imshow(resultImg, interpolation='none', cmap='gray')
+    plt.show()
+   
     timeStart = CO.stopwatchStart()
     resultImg = CANF.cannyFilter(originalImg, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
-    print(resultImg)
+    plt.imshow(resultImg, interpolation='none', cmap='gray')
+    plt.show()
+    resultImg = cv2.Canny(originalImg, 170,120)
+    #resultImg = CANF.cannyFilter(originalImg, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+    
 
-    
-    
-    cv2.imshow("XXX",cv2.Canny(originalImg, 220,190))
-    plt.imshow(cv2.Canny(originalImg, 220,190), interpolation='none', cmap='gray')
     #plt.imshow(resultImg, interpolation='none', cmap='gray')
     plt.show()
     cv2.waitKey()
