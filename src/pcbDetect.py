@@ -28,7 +28,7 @@ def constant(f):
 class _CONVCONST(object):
     @constant
     def CONVMETHOD():
-        return 1
+        return 2
 
 class _GAUSSFILCONST(object):
     """ Constants for using gauss filter
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     PATHCONST = _PATHCONST()
 
     originalImg = CO.loadImage(PATHCONST.IMGINPUT)
-    originalImg = POP.imageLighter(originalImg, 1)
+    #originalImg = POP.imageLighter(originalImg, 1)
 
     kontrassImg = POP.imageKontrass(originalImg, 0.5)
 

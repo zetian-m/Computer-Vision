@@ -3,6 +3,7 @@ import GaussFilter as GAUSF
 import SobelFilter as SOF
 import CannyFilter as CANF
 import matplotlib.pyplot as plt
+import Threshold as TH
 import sys
 import logging
 import cv2
@@ -56,7 +57,7 @@ class _SOBELFILCONST(object):
 class _PATHCONST(object):
     @constant
     def IMGINPUT():
-        return '\\PCB\\LADEIC_MICRO_TOP1.bmp'
+        return '\\lena.bmp'
         #Picture_Crossing_noise_10_pixelCnt_128_featureCnt_5
         #Picture_Crossing_noise_10_pixelCnt_65_featureCnt_9
 #############################################
@@ -74,6 +75,16 @@ if __name__ == "__main__":
     PATHCONST = _PATHCONST()
 
     originalImg = CO.loadImage(PATHCONST.IMGINPUT)
+
+    originalImgTh = TH.threshold(originalImg, 150, 50, 1)
+
+    plt.subplot(121),plt.imshow(originalImg,cmap = 'gray')
+    plt.title('origi'), plt.xticks([]), plt.yticks([])
+    plt.subplot(122),plt.imshow(originalImgTh,cmap = 'gray')
+    plt.title('Threshold'), plt.xticks([]), plt.yticks([])
+    plt.show()
+
+
 
     
     """#* GAUSS filtering
@@ -93,7 +104,7 @@ if __name__ == "__main__":
     print(resultImg)
 
     cv2.imshow("YYY", resultImg)"""
-    resultImg = CANF.cannyFilter(originalImg, 50, 29, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+    resultImg = CANF.cannyFilter(originalImg, 190, 180, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
 
     opencvImg = cv2.Canny(originalImg, 50, 29)
 

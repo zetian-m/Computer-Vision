@@ -128,7 +128,7 @@ def cannyThreshold(edgeGradient, thUpper, thLower):
 
     return newEdgeGradient
 
-def cannyFilter(inputImg, sigma, upperThreshold, lowerThreshold, sobelKernelSize = 3, convMethod = 1, ):
+def cannyFilter(inputImg, sigma, upperThreshold, lowerThreshold, sobelKernelSize = 3, convMethod = 1 ):
     GAUSKERNELSIZE = 5
 
     #* Step 1: Noise Reduction with gauss filter by 5x5 Kernel
