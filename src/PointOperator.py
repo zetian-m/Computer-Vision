@@ -36,14 +36,7 @@ def imageKontrass(image, kontrassFactor):
     return image
 
 def main():
-    original_image = cv.imread("Lena.bmp", cv.IMREAD_GRAYSCALE)
-    cv.imshow("original", original_image)
-    cv.imshow("lighter", image_lighter(original_image, 100))
-    cv.imshow("darker", image_darker(original_image, 150))
-    cv.imshow("contrtass schlechter", image_kontrass(original_image, 0.5))
-    cv.imshow("contrtass besser", image_kontrass(original_image, 2))
-
-    cv.waitKey()
+    pass
     
 
 if __name__ == "__main__":

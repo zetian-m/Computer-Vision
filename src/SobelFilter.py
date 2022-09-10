@@ -40,7 +40,7 @@ def sobelFilter(originalImg, kernelSize, convMethod=0):
     Gx = CO.convolution2D(originalImg, sobelKernelX, convMethod)
     Gy = CO.convolution2D(originalImg, sobelKernelY, convMethod)
 
-    resultImg = np.sqrt(Gx**2 + Gy**2)
+    resultImg = (Gx**2 + Gy**2)**2
 
     Gx = Gx.astype(np.uint8)
     Gy = Gy.astype(np.uint8)

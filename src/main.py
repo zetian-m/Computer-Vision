@@ -56,7 +56,9 @@ class _SOBELFILCONST(object):
 class _PATHCONST(object):
     @constant
     def IMGINPUT():
-        return 'Picture_Crossing_noise_10_pixelCnt_65_featureCnt_9.bmp'
+        return '\\PCB\\LADEIC_MICRO_TOP1.bmp'
+        #Picture_Crossing_noise_10_pixelCnt_128_featureCnt_5
+        #Picture_Crossing_noise_10_pixelCnt_65_featureCnt_9
 #############################################
 #                                           #
 #              End of Constants             #
@@ -91,21 +93,17 @@ if __name__ == "__main__":
     print(resultImg)
 
     cv2.imshow("YYY", resultImg)"""
-    resultImg = CANF.cannyFilter(originalImg, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+    resultImg = CANF.cannyFilter(originalImg, 50, 29, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
 
-    opencvImg = cv2.Canny(originalImg, 220,190)
+    opencvImg = cv2.Canny(originalImg, 50, 29)
 
-    cv2.imshow("XXX", originalImg)
-    cv2.imshow("YYY", resultImg)
-    cv2.imshow("zzz", opencvImg)
-    cv2.waitKey()
-
-    """plt.imshow(resultImg, interpolation='none', cmap='gray')
+    plt.subplot(131),plt.imshow(originalImg,cmap = 'gray')
+    plt.title('imgOriginal'), plt.xticks([]), plt.yticks([])
+    plt.subplot(132),plt.imshow(resultImg,cmap = 'gray')
+    plt.title('imgCanny'), plt.xticks([]), plt.yticks([])
+    plt.subplot(133),plt.imshow(opencvImg,cmap = 'gray')
+    plt.title('imgCanny-opencv'), plt.xticks([]), plt.yticks([])
     plt.show()
-    plt.imshow(originalImg, interpolation='none', cmap='gray')
-    plt.show()
-    plt.imshow(opencvImg, interpolation='none', cmap='gray')
-    plt.show()"""
 
     #* Plotting
     #plt.imshow(resultImg, interpolation='none', cmap='gray')

@@ -3,129 +3,102 @@ import GaussFilter as GAUSF
 import SobelFilter as SOBF
 import matplotlib.pyplot as plt
 import numpy as np
+import cv2
 
 #* This canny filter was implemented with this website as tutorial: 
 #* https://pyimagesearch.com/2021/05/12/opencv-edge-detection-cv2-canny/
 
 def nearestQuarter(ang):
     # round the angle to a quarter
-    return (((round(((ang)/np.pi)/0.5))/4)*(2*np.pi)) % (2*np.pi)
+    return (0.5*np.pi) * (np.round(ang / (0.5*np.pi)))
 
 def roundAngle(sobelPixelAngle):
 
-    pixelMatrixSize = sobelPixelAngle.shape
-    pixelAngleRounded = np.zeros(pixelMatrixSize)
-    for x in range (pixelMatrixSize[0]):
-        for y in range (pixelMatrixSize[1]):
-            pixelAngleRounded[x][y] = nearestQuarter(sobelPixelAngle[x][y])
+    angleMatrixRows, angleMatrixCols = sobelPixelAngle.shape
+    pixelAngleRounded = np.zeros(sobelPixelAngle.shape)
+    #* Go through each pixel and round the angle value
+    for r in range (angleMatrixRows):
+        for c in range (angleMatrixCols):
+            pixelAngleRounded[r, c] = nearestQuarter(sobelPixelAngle[r, c])
 
     return pixelAngleRounded
 
-def setPixelGradientValue(pixelGradientList):
-
-    maxPixelGradient = np.amax(pixelGradientList)
-
-    for index, pixelGradient in np.ndenumerate(pixelGradientList):
-        if pixelGradient != maxPixelGradient:
-            pixelGradient = 0
-        else:
-            continue
-    return pixelGradientList
-
 def nonMaximaSuppression(edgeGradient, pixelAngleRounded):
-    TOP = 0
-    RIGHT = 0.5*np.pi
-    BOTTOM = np.pi
-    LEFT = 1.5*np.pi
+    #* Set the direction Value
+    TOP = 0.5*np.pi
+    RIGHT1 = np.pi
+    RIGHT2 = -np.pi
+    BOTTOM = -0.5*np.pi
+    LEFT = 0
 
-    if edgeGradient.shape != pixelAngleRounded.shape:
-        return -1
+    numRows, numCols = edgeGradient.shape
 
-    gradientSizeX, gradientSizeY = edgeGradient.shape
+    newEdgeGradient = np.zeros(edgeGradient.shape)
 
-    newEdgeGradient = np.zeros((gradientSizeX, gradientSizeY))
+    #* Because of NMS, the value in a 3x3 matrix will be searched. 
+    #* Beginns with 1 and ends with numCols-1
+    for r in range(1, numRows-1):
+        for c in range(1, numCols-1):
 
-    #* Because of 3x3 submatrix, the iteration goes only for (size-2)
-    for y in range(gradientSizeY-2):
-        for x in range(gradientSizeX-2):
-            #* get 3x3 submatrix for nonMaximaSuppression
-            subEdgeGradient = edgeGradient[x:x+3, y:y+3]
-            subPixelAngleRounded = pixelAngleRounded[x:x+3, y:y+3]
+            #* get the central pixel Angle
+            centralPixelAngle = pixelAngleRounded[r,c]
 
-            #* get the central point value -> angle and gradient
-            centralPixelAngle = subPixelAngleRounded.item((1,1))
-            #centralPixelGradient = subEdgeGradient.item((1,1))
+            #* check the angle direction of central pixel
 
-            #* check the angle direction
-            if  centralPixelAngle == TOP or centralPixelAngle == BOTTOM:
+            if  centralPixelAngle in (TOP, BOTTOM):
                 #* compare the central gradient value with TOP and BOTTOM
-                pixelGradientList = subEdgeGradient[1:2, 0:3]
+                neighborPixelA = edgeGradient[r+1, c]
+                neighborPixelB = edgeGradient[r-1, c]
 
-                #* search for max and discard other value
-                pixelGradientList = setPixelGradientValue(pixelGradientList)
-
-                subEdgeGradient[1:2, 0:3] = pixelGradientList
-
-            elif centralPixelAngle == LEFT or centralPixelAngle == RIGHT:
+            elif centralPixelAngle in (LEFT, RIGHT1, RIGHT2):
                 #* compare the cantral gradient value with LEFT and RIGHT
-                pixelGradientList = subEdgeGradient[0:3, 1:2]
-                #* search for max and discard other value
-                pixelGradientList = setPixelGradientValue(pixelGradientList)
-
-                subEdgeGradient[0:3, 1:2] = pixelGradientList
+                neighborPixelA = edgeGradient[r,c+1]
+                neighborPixelB = edgeGradient[r,c-1]
 
             else:
                 return -1
-            newEdgeGradient[y:y+3, x:x+3] = subEdgeGradient
-            x += 3
-        y += 3    
-            #print(subEdgeGradient.item(1,1))
+
+            #* If the central gradient larger than others in the direction, then consider this. Else equals 0
+            if edgeGradient[r,c] > neighborPixelA and edgeGradient[r,c] > neighborPixelB:
+                newEdgeGradient[r,c] = edgeGradient[r,c]
         
-    return newEdgeGradient        
+    return newEdgeGradient    
 
 def cannyThreshold(edgeGradient, thUpper, thLower):
 
-    gradientSizeX, gradientSizeY = edgeGradient.shape
-
+    numRows, numCols = edgeGradient.shape
+    newEdgeGradient = np.zeros(edgeGradient.shape)
     #* go throught every pixel in the edgeGardient
-    for x in range (gradientSizeX):
-        for y in range (gradientSizeY):
+    for r in range (0, numRows):
+        for c in range (0, numCols):
 
             #* Get the central pixel value
-            pixelValue = edgeGradient.item((x,y))
-
-            
-            if pixelValue >= thUpper:
+            centralPixelValue = edgeGradient[r, c]
+            if centralPixelValue >= thUpper:
                 #* Value above threshold upper -> take it as a edge
-                pixelValue = 255
-            elif pixelValue <= thLower:
+                centralPixelValue = 255
+            elif centralPixelValue <= thLower:
                 #* Value under threshold lower -> discard it
-                pixelValue = 0
+                centralPixelValue = 0
             else:
                 #* Value between threshold upper and lower -> take it and check connectivity
                 pass
 
-
             #* Set the pixel value
-            edgeGradient[x,y] = pixelValue
-
-    #* Check if this pixel connects to a edge
-    #plt.imshow(edgeGradient, interpolation='none', cmap='gray')
-    #plt.show()
+            newEdgeGradient[r,c] = centralPixelValue
     
-    for y in range(gradientSizeY-2):
-        for x in range(gradientSizeX-2):
+    #* Check if this pixel connects to a edge
+    for r in range(numRows-2):
+        for c in range(numCols-2):
             #* Get the 3x3 submatrix surrounding
-            subEdgeGradient = edgeGradient[y:y+3, x:x+3]
+            subEdgeGradient = newEdgeGradient[r:r+3, c:c+3]
             #* Get the central pixel value
-            centralPixelValue = subEdgeGradient.item((1,1))
-            
+            centralPixelValue = subEdgeGradient[1,1]
+
             if  centralPixelValue < thUpper and centralPixelValue > thLower:
                 #* only consider the value that between threshold
                 connectedToEdge = False
-                
                 for index, pixelValue in np.ndenumerate(subEdgeGradient) :
-                    
                     if pixelValue >= thUpper:
                         #* Check if there is any pixel value larger than threshold upper
                         #* but this pixel is not the central pixel
@@ -141,18 +114,21 @@ def cannyThreshold(edgeGradient, thUpper, thLower):
                     subEdgeGradient[1, 1] = 255
                     
                 #* Change value of edgeGradient
-                edgeGradient[y:y+3, x:x+3] = subEdgeGradient
-                
-
-                
-
-              
+                newEdgeGradient[r:r+3, c:c+3] = subEdgeGradient
             else:
                 continue
-                
-    return edgeGradient
+    #* Uncomment this to see the result of hysteresis Thresholding
+    """plt.subplot(131),plt.imshow(edgeGradient, cmap = 'gray')
+    plt.title('oldEdgeGradient'), plt.xticks([]), plt.yticks([])
+    
+    plt.subplot(133),plt.imshow(newEdgeGradient, cmap = 'gray')
+    plt.title('EndEdgeGradient'), plt.xticks([]), plt.yticks([])
+    plt.show()"""      
 
-def cannyFilter(inputImg, sigma, sobelKernelSize = 3, convMethod = 0):
+
+    return newEdgeGradient
+
+def cannyFilter(inputImg, sigma, upperThreshold, lowerThreshold, sobelKernelSize = 3, convMethod = 1, ):
     GAUSKERNELSIZE = 5
 
     #* Step 1: Noise Reduction with gauss filter by 5x5 Kernel
@@ -160,25 +136,49 @@ def cannyFilter(inputImg, sigma, sobelKernelSize = 3, convMethod = 0):
 
     #* Step 2.1: Finding Intensity Gradient of the image by using sobel filer
     #* Sobel-Kernel size is by default: 3
-    Gx, Gy, EdgeGradient = SOBF.sobelFilter(imgGaussFiltered, sobelKernelSize, convMethod)
+    sobelKernelX, sobelKernelY = SOBF.creatSobelKernel(sobelKernelSize)
+    Gx = CO.convolution2D(imgGaussFiltered, sobelKernelX, convMethod)
+    Gy = CO.convolution2D(imgGaussFiltered, sobelKernelY, convMethod)
+    EdgeGradient = (Gx ** 2 + Gy ** 2) ** 0.5
+
+    #* Uncomment to see the result of sobel filter
+    """plt.subplot(221),plt.imshow(imgGaussFiltered,cmap = 'gray')
+    plt.title('imgGaussFiltered'), plt.xticks([]), plt.yticks([])
+    plt.subplot(222),plt.imshow(Gx,cmap = 'gray')
+    plt.title('Gx'), plt.xticks([]), plt.yticks([])
+    plt.subplot(223),plt.imshow(Gy,cmap = 'gray')
+    plt.title('Gy'), plt.xticks([]), plt.yticks([])
+    plt.subplot(224),plt.imshow(EdgeGradient,cmap = 'gray')
+    plt.title('EdgeGradient'), plt.xticks([]), plt.yticks([])
+    plt.show()"""
 
     #* Step 2.2: Calculate Angle of each pixel 
     pixelAngle = np.arctan2(Gy, Gx)
-    #print(pixelAngle)
     
-    #* Step 2.3: Round all angles to a quater of a circle (0, 0.5*pi, pi, 1,5*pi)
+    
+    #* Step 2.3: Round all angles to a quater of a circle
+    #* LEFT     -> rad:0, degree:0
+    #* TOP      -> rad:1.57, degree:90
+    #* BOTTOM   -> rad:-1.57, degree:-90
+    #* RIGHT    -> rad:3.14 or -3.14, degree:180 or -180
     pixelAngleRounded = roundAngle(pixelAngle)
 
     #* Step 3: Application of Non-maxima suppression
-    EdgeGradient = nonMaximaSuppression(EdgeGradient, pixelAngleRounded)
-    #plt.imshow(EdgeGradient, interpolation='none', cmap='gray')
-    #plt.show()
-    #* Step 4: Thresholding
-    EdgeGradient = cannyThreshold(EdgeGradient, 220, 190)
+    newEdgeGradient = nonMaximaSuppression(EdgeGradient, pixelAngleRounded)
 
-    #sobelPixelAngleRounded = sobelPixelAngleRounded.astype(np.uint8)
-    #plt.imshow(EdgeGradient, interpolation='none', cmap='gray')
-    #plt.show()
+    #* Uncomment these to see the result of non Maxima Suppression
+    """plt.subplot(221),plt.imshow(pixelAngle, cmap = 'gray')
+    plt.title('pixelAngle'), plt.xticks([]), plt.yticks([])
+    plt.subplot(222),plt.imshow(pixelAngleRounded, cmap = 'gray')
+    plt.title('pixelAngleRounded'), plt.xticks([]), plt.yticks([])
+    plt.subplot(223),plt.imshow(EdgeGradient, cmap = 'gray')
+    plt.title('EdgeGradient'), plt.xticks([]), plt.yticks([])
+    plt.subplot(224),plt.imshow(newEdgeGradient, cmap = 'gray')
+    plt.title('newEdgeGradient'), plt.xticks([]), plt.yticks([])
+    plt.show()"""
+    
+    #* Step 4: hysteresis Thresholding
+    EdgeGradient = cannyThreshold(newEdgeGradient, upperThreshold, lowerThreshold)
 
     return EdgeGradient
 
