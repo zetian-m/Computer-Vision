@@ -33,6 +33,8 @@ def loadImage(imgFileName):
     #* Could also use the cv2 function instead
     try:
         original_image = plt.imread(imagePath, plt.gray)
+        if len(original_image.shape) == 3:
+            original_image = cv2.imread(imagePath, cv2.IMREAD_GRAYSCALE)
     except:
         original_image = cv2.imread(imagePath, cv2.IMREAD_GRAYSCALE)
 
@@ -55,26 +57,28 @@ def convolution2D(image, kernel, convMethod):
     kernelSizeX, kernelSizeY = kernel.shape
 
     
-    
-    #* Check if both are square
+    """#* Check if both are square
     if imgSizeX == imgSizeY:
         imgSize = imgSizeX
     else:
-        logging.warning("imgSizeX != imgSizeY")
+        logging.warning("imgSizeX != imgSizeY")"""
+
     if kernelSizeX == kernelSizeY:
         kernelSize = kernelSizeX
     else:
         logging.warning("kernelSizeX != kernelSizeY")
-
-    resultSizeX = imgSize - kernelSize + 1
-    resultSizeY = imgSize - kernelSize + 1
-
+    
+    resultSizeX = imgSizeX - kernelSizeX + 1
+    resultSizeY = imgSizeY - kernelSizeY + 1
+    print(resultSizeX, resultSizeY)
     #* Notice that np.zeros() has different position of X and Y in input
     resultImage = np.zeros((resultSizeY,resultSizeX))
 
     if convMethod == 0:
-        for i in range(resultSizeX):
-            for j in range(resultSizeY):
+        for j in range(resultSizeY):
+            for i in range(resultSizeX):
+                #print(j,i)
+                #print(image[j:j+kernelSize, i:i+kernelSize])
                 resultImage[j][i] = np.sum(image[j:j+kernelSize, i:i+kernelSize] * kernel)
     
     elif convMethod == 1:
