@@ -30,7 +30,7 @@ def constant(f):
 class _CONVCONST(object):
     @constant
     def CONVMETHOD():
-        return 0
+        return 1
 
 class _GAUSSFILCONST(object):
     """ Constants for using gauss filter
@@ -42,10 +42,10 @@ class _GAUSSFILCONST(object):
         #9.3
         #0.93
         #1
-        return 1
+        return 65
     @constant
     def KERNELSIZE():
-        return 3
+        return 77
 
 class _SOBELFILCONST(object):
     """ Constants for using sobel filter
@@ -77,6 +77,18 @@ if __name__ == "__main__":
     originalImg = CO.loadImage(PATHCONST.IMGINPUT)
     #originalImg = POP.imageLighter(originalImg, 1)
     os.chdir(r"C:\Users\75639\OneDrive\BHT\2. Se\Bildverarbeitung\Computer-Vision\pics\python")
+
+    gaKernel, gaImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
+
+    plt.subplot(131),plt.imshow(originalImg, cmap = 'gray')
+    plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+    plt.subplot(132),plt.imshow(gaKernel, cmap = 'gray')
+    plt.title('Gauss Kernel'), plt.xticks([]), plt.yticks([])
+    plt.subplot(133),plt.imshow(gaImg, cmap = 'gray')
+    plt.title('Image after Gaussfiltering'), plt.xticks([]), plt.yticks([])
+    plt.show()
+
+
     kontrassImg = POP.imageKontrass(originalImg, 1.5)
 
     imgThreshold = TH.threshold(kontrassImg, 110, 90, 2)
@@ -95,6 +107,9 @@ if __name__ == "__main__":
     gausskernel, gaussImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
     timeSobelFilter = CO.stopwatchStop(timeStart)
     print("Gauss Filter needed:", timeSobelFilter)
+
+
+    
 
     plt.subplot(131),plt.imshow(originalImg,cmap = 'gray')
     plt.title('original'), plt.xticks([]), plt.yticks([])

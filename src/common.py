@@ -40,6 +40,21 @@ def loadImage(imgFileName):
 
     return original_image
 
+def imgPadding(image, kernel):
+
+    origImgRows, origImgCols = image.shape
+    kernelRows, kernelCols = kernel.shape
+
+    extentionRows = int(kernelRows/2)
+    extentionCols = int(kernelCols/2)
+
+    imgNew = np.zeros((origImgRows+extentionRows*2, origImgCols+extentionCols*2))
+    imgNew[extentionRows:extentionRows+origImgRows, extentionCols:extentionCols+origImgCols] = image
+
+    
+
+    return imgNew
+
 def convolution2D(image, kernel, convMethod):
     """ This is the common function for doing convolution 2D.
 
@@ -55,6 +70,8 @@ def convolution2D(image, kernel, convMethod):
     #* Get Size of image and kernel
     imgSizeX, imgSizeY = image.shape
     kernelSizeX, kernelSizeY = kernel.shape
+
+    image = imgPadding(image, kernel)
 
     
     """#* Check if both are square

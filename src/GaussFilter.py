@@ -46,7 +46,7 @@ def gaussFilter(originalImg, kernelSize, sigma, convMethod=0):
 
     resultImg = CO.convolution2D(originalImg, gaussKernel, convMethod)
 
-    gaussKernel = gaussKernel.astype(np.uint8)
+    gaussKernel = gaussKernel
     resultImg = resultImg.astype(np.uint8)
 
     return gaussKernel, resultImg
