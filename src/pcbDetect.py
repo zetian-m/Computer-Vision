@@ -30,7 +30,7 @@ def constant(f):
 class _CONVCONST(object):
     @constant
     def CONVMETHOD():
-        return 1
+        return 0
 
 class _GAUSSFILCONST(object):
     """ Constants for using gauss filter
