@@ -7,6 +7,7 @@ import cv2
 
 #* This canny filter was implemented with this website as tutorial: 
 #* https://pyimagesearch.com/2021/05/12/opencv-edge-detection-cv2-canny/
+#* https://towardsdatascience.com/canny-edge-detection-step-by-step-in-python-computer-vision-b49c3a2d8123
 
 def nearestQuarter(ang):
     # round the angle to a quarter

@@ -42,10 +42,10 @@ class _GAUSSFILCONST(object):
         #9.3
         #0.93
         #1
-        return 65
+        return 5
     @constant
     def KERNELSIZE():
-        return 77
+        return 5
 
 class _SOBELFILCONST(object):
     """ Constants for using sobel filter
@@ -77,6 +77,34 @@ if __name__ == "__main__":
     originalImg = CO.loadImage(PATHCONST.IMGINPUT)
     #originalImg = POP.imageLighter(originalImg, 1)
     os.chdir(r"C:\Users\75639\OneDrive\BHT\2. Se\Bildverarbeitung\Computer-Vision\pics\python")
+
+    gaKernel, gaImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
+    #* SOBEL filtering
+    timeStart = CO.stopwatchStart()
+    sobelGx, sobelGy, sobelImg = SOF.sobelFilter(gaImg, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+    timeSobelFilter = CO.stopwatchStop(timeStart)
+    print("Sobel Filter needed:", timeSobelFilter)
+
+    timeStart = CO.stopwatchStart()
+    cannyImg = CANF.cannyFilter(sobelImg, 130, 120, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+    timeSobelFilter = CO.stopwatchStop(timeStart)
+    print("Canny Filter needed:", timeSobelFilter)
+
+    imgThreshold = TH.threshold(sobelImg, 50, 15, 4)
+    #imgThreshold = TH.threshold(sobelImg, 150, 15, 2)
+
+    plt.subplot(151),plt.imshow(originalImg, cmap = 'gray')
+    plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+    plt.subplot(152),plt.imshow(gaImg, cmap = 'gray')
+    plt.title('Gauss Filtered Image'), plt.xticks([]), plt.yticks([])
+    plt.subplot(153),plt.imshow(sobelImg, cmap = 'gray')
+    plt.title('Sobel Filtered Image'), plt.xticks([]), plt.yticks([])
+    plt.subplot(154),plt.imshow(cannyImg, cmap = 'gray')
+    plt.title('Canny Filtered Image'), plt.xticks([]), plt.yticks([])
+    plt.subplot(155),plt.imshow(imgThreshold, cmap = 'gray')
+    plt.title('Threshold'), plt.xticks([]), plt.yticks([])
+    plt.show()
+
 
     gaKernel, gaImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
 

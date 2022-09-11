@@ -27,5 +27,11 @@ def threshold(img, upperThreshold, lowerThreshold, thMethod=1):
 
         row_max, col_max = np.where(img < lowerThreshold)
         imgThreshold[row_max, col_max] = 0
+
+    elif thMethod == 4:
+        row_max, col_max = np.where(img < lowerThreshold)
+        imgThreshold[row_max, col_max] = 0
+        row_max, col_max = np.where(img > upperThreshold)
+        imgThreshold[row_max, col_max] = 0
     
     return imgThreshold
