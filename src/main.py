@@ -76,6 +76,8 @@ if __name__ == "__main__":
 
     originalImg = CO.loadImage(PATHCONST.IMGINPUT)
 
+    CO.imgPadding(originalImg, GAUSF.creatGaussKernel(50, 1), paddingMethod=0)
+
     originalImgTh = TH.threshold(originalImg, 150, 50, 1)
 
     plt.subplot(121),plt.imshow(originalImg,cmap = 'gray')

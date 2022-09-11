@@ -40,17 +40,40 @@ def loadImage(imgFileName):
 
     return original_image
 
-def imgPadding(image, kernel):
-
-    origImgRows, origImgCols = image.shape
+def imgPadding(image, kernel, paddingMethod=2):
+    
     kernelRows, kernelCols = kernel.shape
 
-    extentionRows = int(kernelRows/2)
-    extentionCols = int(kernelCols/2)
+    #* Calculate the Rows and Cols that need to be extended
+    extentionRows = int((kernelRows-1)/2)
+    extentionCols = int((kernelCols-1)/2)
 
-    imgNew = np.zeros((origImgRows+extentionRows*2, origImgCols+extentionCols*2))
-    imgNew[extentionRows:extentionRows+origImgRows, extentionCols:extentionCols+origImgCols] = image
 
+    #* Appling diffrenent Padding-Method
+    if paddingMethod == 0:
+        #* Padding with constant 0
+        imgNew = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='constant', constant_values=0)
+    elif paddingMethod == 1:
+        #* Mirror-Padding
+        imgNew = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='reflect')
+    elif paddingMethod == 2:
+        #* Replicate-Padding
+        imgNew = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='edge')
+
+    #* Uncomment this to compare the difference between padding method
+    """imgNew1 = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='constant', constant_values=0)
+    imgNew2 = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='reflect')
+    imgNew3 = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='edge')
+
+    plt.subplot(221),plt.imshow(image,cmap = 'gray')
+    plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+    plt.subplot(222),plt.imshow(imgNew1,cmap = 'gray')
+    plt.title('Zero-Padding'), plt.xticks([]), plt.yticks([])   
+    plt.subplot(223),plt.imshow(imgNew2,cmap = 'gray')
+    plt.title('Mirror-Padding'), plt.xticks([]), plt.yticks([])
+    plt.subplot(224),plt.imshow(imgNew3,cmap = 'gray')
+    plt.title('Replicate-Padding'), plt.xticks([]), plt.yticks([])
+    plt.show()"""
     
 
     return imgNew
