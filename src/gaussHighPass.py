@@ -32,7 +32,7 @@ if __name__ == "__main__":
     # create ideal low pass filter
     H = np.zeros((P, Q), dtype=np.float32)
 
-    D0 = 80
+    D0 = 50
     for u in range(P):
         for v in range(Q):
             D = np.sqrt((u-P/2)**2 + (v-Q/2)**2)

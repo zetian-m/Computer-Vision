@@ -32,7 +32,7 @@ if __name__ == "__main__":
     # create ideal high pass filter
     H = np.zeros((P, Q), dtype=np.float32)
 
-    D0 = 100
+    D0 = 60
     for u in range(P):
         for v in range(Q):
             D = np.sqrt((u-P/2)**2 + (v-Q/2)**2)
@@ -43,7 +43,6 @@ if __name__ == "__main__":
 
     # apply low pass filter
     G_shift = F_shift * H
-
     # calc magnitude of frequency, log transformation log(1+r)
     G_shiftmag = np.log1p(np.abs(G_shift))
 
@@ -56,10 +55,22 @@ if __name__ == "__main__":
     # remove padding
     g = g_p[0:M, 0:N]
 
+    # remove negative values
+    g = g - np.min(g)
+
+    # scalue picture to 8 bytes
+    g = np.rint(255 * (g / np.max(g)))
+
     # convert filter in spatial domain
     H_unshifted = np.fft.ifftshift(H)
     h = np.real(np.fft.ifft2(H_unshifted))
     h = np.fft.fftshift(h)
+
+    # remove negative values
+    #h = h - np.min(h)
+
+    # scalue to 8 bytes
+    #h = 255 * (h / np.max(h))
 
     # intensity profile of center line 
     intstyProfile = h[int(P/2), :]
@@ -81,9 +92,9 @@ if __name__ == "__main__":
     plt.title('G[u, v]'), plt.xticks([]), plt.yticks([])
 
     plt.figure(3)
-    plt.subplot(121),plt.imshow(g, cmap = 'gray')
+    plt.subplot(121),plt.imshow(g, cmap = 'gray')   
     plt.title('Gefiltertes Bild'), plt.xticks([]), plt.yticks([])
-    plt.subplot(122),plt.imshow(h, cmap = 'gray')
+    plt.subplot(122),plt.imshow(h, cmap = 'gray', vmin=-0.1, vmax=0.1)
     plt.title('Filter im Originalbereich'), plt.xticks([]), plt.yticks([])
 
     plt.figure(4)
