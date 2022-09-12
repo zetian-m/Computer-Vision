@@ -7,6 +7,7 @@ import cv2
 
 #* This canny filter was implemented with this website as tutorial: 
 #* https://pyimagesearch.com/2021/05/12/opencv-edge-detection-cv2-canny/
+#* https://towardsdatascience.com/canny-edge-detection-step-by-step-in-python-computer-vision-b49c3a2d8123
 
 def nearestQuarter(ang):
     # round the angle to a quarter
@@ -37,6 +38,7 @@ def nonMaximaSuppression(edgeGradient, pixelAngleRounded):
 
     #* Because of NMS, the value in a 3x3 matrix will be searched. 
     #* Beginns with 1 and ends with numCols-1
+
     for r in range(1, numRows-1):
         for c in range(1, numCols-1):
 
@@ -66,6 +68,8 @@ def nonMaximaSuppression(edgeGradient, pixelAngleRounded):
 
 def cannyThreshold(edgeGradient, thUpper, thLower):
 
+
+
     numRows, numCols = edgeGradient.shape
     newEdgeGradient = np.zeros(edgeGradient.shape)
     #* go throught every pixel in the edgeGardient
@@ -81,6 +85,7 @@ def cannyThreshold(edgeGradient, thUpper, thLower):
                 #* Value under threshold lower -> discard it
                 centralPixelValue = 0
             else:
+                centralPixelValue = 0
                 #* Value between threshold upper and lower -> take it and check connectivity
                 pass
 
@@ -128,7 +133,7 @@ def cannyThreshold(edgeGradient, thUpper, thLower):
 
     return newEdgeGradient
 
-def cannyFilter(inputImg, sigma, upperThreshold, lowerThreshold, sobelKernelSize = 3, convMethod = 1, ):
+def cannyFilter(inputImg, sigma, upperThreshold, lowerThreshold, sobelKernelSize = 3, convMethod = 1 ):
     GAUSKERNELSIZE = 5
 
     #* Step 1: Noise Reduction with gauss filter by 5x5 Kernel

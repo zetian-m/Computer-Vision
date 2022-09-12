@@ -40,6 +40,44 @@ def loadImage(imgFileName):
 
     return original_image
 
+def imgPadding(image, kernel, paddingMethod=2):
+    
+    kernelRows, kernelCols = kernel.shape
+
+    #* Calculate the Rows and Cols that need to be extended
+    extentionRows = int((kernelRows-1)/2)
+    extentionCols = int((kernelCols-1)/2)
+
+
+    #* Appling diffrenent Padding-Method
+    if paddingMethod == 0:
+        #* Padding with constant 0
+        imgNew = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='constant', constant_values=0)
+    elif paddingMethod == 1:
+        #* Mirror-Padding
+        imgNew = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='reflect')
+    elif paddingMethod == 2:
+        #* Replicate-Padding
+        imgNew = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='edge')
+
+    #* Uncomment this to compare the difference between padding method
+    """imgNew1 = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='constant', constant_values=0)
+    imgNew2 = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='reflect')
+    imgNew3 = np.pad(image, [(extentionRows, ),(extentionCols, )], mode='edge')
+
+    plt.subplot(221),plt.imshow(image,cmap = 'gray')
+    plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+    plt.subplot(222),plt.imshow(imgNew1,cmap = 'gray')
+    plt.title('Zero-Padding'), plt.xticks([]), plt.yticks([])   
+    plt.subplot(223),plt.imshow(imgNew2,cmap = 'gray')
+    plt.title('Mirror-Padding'), plt.xticks([]), plt.yticks([])
+    plt.subplot(224),plt.imshow(imgNew3,cmap = 'gray')
+    plt.title('Replicate-Padding'), plt.xticks([]), plt.yticks([])
+    plt.show()"""
+    
+
+    return imgNew
+
 def convolution2D(image, kernel, convMethod):
     """ This is the common function for doing convolution 2D.
 
@@ -55,6 +93,8 @@ def convolution2D(image, kernel, convMethod):
     #* Get Size of image and kernel
     imgSizeX, imgSizeY = image.shape
     kernelSizeX, kernelSizeY = kernel.shape
+
+    image = imgPadding(image, kernel)
 
     
     """#* Check if both are square
@@ -81,6 +121,11 @@ def convolution2D(image, kernel, convMethod):
     
     elif convMethod == 1:
         resultImage = signal.convolve2d(image, kernel, boundary='symm', mode='same')
+
+    elif convMethod == 2:
+        for j in range(0, resultSizeY):
+            for i in range(0, resultSizeX):
+                resultImage = np.fft.irfft(np.dot(np.fft.rfft2(image[i:i+kernelSizeX, j:j+kernelSizeY]) * np.fft.rfft2(kernel)))
 
     else:
         print("Convolution Method not valid")
