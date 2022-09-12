@@ -11,7 +11,7 @@ import PointOperator as po
 if __name__ == "__main__":
 
     # load image
-    f = com.loadImage("Flower_interference.jpg")
+    f = com.loadImage("lena.bmp")
     
     # image size
     M, N = f.shape
@@ -29,14 +29,14 @@ if __name__ == "__main__":
     # calc magnitude of frequency, log transformation log(1+r)
     Fshiftmag = np.log1p(np.abs(F_shift))
 
-    # create ideal low pass filter
+    # create ideal high pass filter
     H = np.zeros((P, Q), dtype=np.float32)
 
     D0 = 100
     for u in range(P):
         for v in range(Q):
             D = np.sqrt((u-P/2)**2 + (v-Q/2)**2)
-            if D <= D0:
+            if D > D0:
                 H[u, v] = 1
             else:
                 H[u, v] = 0
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     # remove padding
     g = g_p[0:M, 0:N]
 
-    # filter in spatial domain
+    # convert filter in spatial domain
     H_unshifted = np.fft.ifftshift(H)
     h = np.real(np.fft.ifft2(H_unshifted))
     h = np.fft.fftshift(h)
@@ -88,10 +88,9 @@ if __name__ == "__main__":
 
     plt.figure(4)
     plt.subplot(111),plt.plot(np.linspace(0,Q,Q), intstyProfile)
-    plt.title('Intensitätsprofil'), plt.xticks([]), plt.yticks([])
-    plt.show()
-    pass
-"""    plt.figure(5)
+    plt.title('Intensitätsprofil')
+
+    plt.figure(5)
     #plt.rcParams['font.size'] = '16'
     ax = plt.subplot(projection='3d')
     u = np.linspace(0, P, P)
@@ -107,4 +106,6 @@ if __name__ == "__main__":
     #ax.axes.yaxis.set_ticks([])
     #ax.axes.zaxis.set_ticks([])
     ax.grid(True)
-    ax.set_zlabel("H[u,v]", fontsize=20, labelpad=1)"""
+    ax.set_zlabel("H[u,v]", fontsize=20, labelpad=1)
+    plt.show()
+    pass
