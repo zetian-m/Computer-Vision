@@ -90,11 +90,15 @@ def convolution2D(image, kernel, convMethod):
     Returns:
         resultImg (_intMatrix_):    The new image after convolution
     """
+    if convMethod == 0:
+        image = imgPadding(image, kernel)
+    else:
+        pass
     #* Get Size of image and kernel
     imgSizeX, imgSizeY = image.shape
     kernelSizeX, kernelSizeY = kernel.shape
 
-    image = imgPadding(image, kernel)
+    
 
     
     """#* Check if both are square
