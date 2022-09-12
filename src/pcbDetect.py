@@ -7,6 +7,7 @@ import sys
 import logging
 import cv2
 import PointOperator as POP
+import Illuminate as IL
 import Threshold as TH
 import os
 
@@ -78,103 +79,27 @@ if __name__ == "__main__":
     #originalImg = POP.imageLighter(originalImg, 1)
     os.chdir(r"C:\Users\75639\OneDrive\BHT\2. Se\Bildverarbeitung\Computer-Vision\pics\python")
 
-    gaKernel, gaImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
-    #* SOBEL filtering
-    timeStart = CO.stopwatchStart()
-    sobelGx, sobelGy, sobelImg = SOF.sobelFilter(gaImg, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
-    timeSobelFilter = CO.stopwatchStop(timeStart)
-    print("Sobel Filter needed:", timeSobelFilter)
+    #kontrassImg = POP.imageKontrass(originalImg, 2)
 
-    timeStart = CO.stopwatchStart()
-    cannyImg = CANF.cannyFilter(sobelImg, 130, 120, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
-    timeSobelFilter = CO.stopwatchStop(timeStart)
-    print("Canny Filter needed:", timeSobelFilter)
+    #kontrassImg = IL.Illuminate(originalImg, 5, 0.8)
 
-    imgThreshold = TH.threshold(sobelImg, 50, 15, 4)
-    #imgThreshold = TH.threshold(sobelImg, 150, 15, 2)
+    gaKernel, gaImg = GAUSF.gaussFilter(originalImg , GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
+    imgThreshold = TH.threshold(gaImg, 210, 50, 2)
+    imgThreshold = TH.threshold(imgThreshold, 190, 200, 3)
 
-    plt.subplot(151),plt.imshow(originalImg, cmap = 'gray')
+
+    
+    
+    sobelGx, sobelGy, sobelImg = SOF.sobelFilter(imgThreshold, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+
+    cannyImg = CANF.cannyFilter(imgThreshold, 10, 5, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+
+    plt.subplot(221),plt.imshow(originalImg, cmap = 'gray')
     plt.title('Original Image'), plt.xticks([]), plt.yticks([])
-    plt.subplot(152),plt.imshow(gaImg, cmap = 'gray')
-    plt.title('Gauss Filtered Image'), plt.xticks([]), plt.yticks([])
-    plt.subplot(153),plt.imshow(sobelImg, cmap = 'gray')
+    plt.subplot(222),plt.imshow(imgThreshold, cmap = 'gray')
+    plt.title('Thresholded Image'), plt.xticks([]), plt.yticks([])
+    plt.subplot(223),plt.imshow(sobelImg, cmap = 'gray')
     plt.title('Sobel Filtered Image'), plt.xticks([]), plt.yticks([])
-    plt.subplot(154),plt.imshow(cannyImg, cmap = 'gray')
+    plt.subplot(224),plt.imshow(cannyImg, cmap = 'gray')
     plt.title('Canny Filtered Image'), plt.xticks([]), plt.yticks([])
-    plt.subplot(155),plt.imshow(imgThreshold, cmap = 'gray')
-    plt.title('Threshold'), plt.xticks([]), plt.yticks([])
     plt.show()
-
-
-    gaKernel, gaImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
-
-    plt.subplot(131),plt.imshow(originalImg, cmap = 'gray')
-    plt.title('Original Image'), plt.xticks([]), plt.yticks([])
-    plt.subplot(132),plt.imshow(gaKernel, cmap = 'gray')
-    plt.title('Gauss Kernel'), plt.xticks([]), plt.yticks([])
-    plt.subplot(133),plt.imshow(gaImg, cmap = 'gray')
-    plt.title('Image after Gaussfiltering'), plt.xticks([]), plt.yticks([])
-    plt.show()
-
-
-    kontrassImg = POP.imageKontrass(originalImg, 1.5)
-
-    imgThreshold = TH.threshold(kontrassImg, 110, 90, 2)
-
-    plt.subplot(131),plt.imshow(originalImg,cmap = 'gray')
-    plt.title('original'), plt.xticks([]), plt.yticks([])
-    plt.subplot(132),plt.imshow(kontrassImg,cmap = 'gray')
-    plt.title('kontrass'), plt.xticks([]), plt.yticks([])
-    plt.subplot(133),plt.imshow(imgThreshold,cmap = 'gray')
-    plt.title('Threshold'), plt.xticks([]), plt.yticks([])
-    plt.show()
-
-    #thresholdImg = TH.threshold(kontrassImg, 150, 140, 3)
-
-    timeStart = CO.stopwatchStart()
-    gausskernel, gaussImg = GAUSF.gaussFilter(originalImg, GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
-    timeSobelFilter = CO.stopwatchStop(timeStart)
-    print("Gauss Filter needed:", timeSobelFilter)
-
-
-    
-
-    plt.subplot(131),plt.imshow(originalImg,cmap = 'gray')
-    plt.title('original'), plt.xticks([]), plt.yticks([])
-    plt.subplot(132),plt.imshow(kontrassImg,cmap = 'gray')
-    plt.title('kontrass'), plt.xticks([]), plt.yticks([])
-    plt.subplot(133),plt.imshow(gaussImg,cmap = 'gray')
-    plt.title('Gauss'), plt.xticks([]), plt.yticks([])
-    plt.show()
-
-    #* SOBEL filtering
-    timeStart = CO.stopwatchStart()
-    sobelGx, sobelGy, sobelImg = SOF.sobelFilter(originalImg, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
-    timeSobelFilter = CO.stopwatchStop(timeStart)
-    print("Sobel Filter needed:", timeSobelFilter)
-
-    timeStart = CO.stopwatchStart()
-    cannyImg = CANF.cannyFilter(originalImg, 70, 50, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
-    timeSobelFilter = CO.stopwatchStop(timeStart)
-    print("Canny Filter needed:", timeSobelFilter)
-
-    #* Plotting
-    plt.subplot(221),plt.imshow(originalImg,cmap = 'gray')
-    plt.title('imgOriginal'), plt.xticks([]), plt.yticks([])
-    plt.subplot(222),plt.imshow(originalImg,cmap = 'gray')
-    plt.title('img kontrass higher'), plt.xticks([]), plt.yticks([])
-    plt.subplot(223),plt.imshow(sobelImg,cmap = 'gray')
-    plt.title('imgSobel'), plt.xticks([]), plt.yticks([])
-    plt.subplot(224),plt.imshow(cannyImg,cmap = 'gray')
-    plt.title('imgCanny'), plt.xticks([]), plt.yticks([])
-    plt.show()
-    
-    cv2.imwrite("CannyFiltered2.bmp", cannyImg)
-    plt.imshow(cannyImg,cmap = 'gray')
-    plt.show()
-    #plt.imshow(resultImg, interpolation='none', cmap='gray')
-    #plt.show()
-    
-
-
-
