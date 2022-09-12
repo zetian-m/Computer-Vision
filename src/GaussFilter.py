@@ -52,5 +52,24 @@ def gaussFilter(originalImg, kernelSize, sigma, convMethod=0):
     return gaussKernel, resultImg
 
 if __name__ == '__main__':
-    #* Write the module test function here
-    pass
+    #!! Darstellung der Gausskernel
+    u = 1
+    gaussKernelSigma = []
+    for i in (7, 9):
+        gaussKernelSize = []
+        for sigma in (1, 2):
+            plt.subplot(2,2,u), plt.imshow(creatGaussKernel(i, sigma), 'gray')
+            plt.title('Gauss-Kernel\n(Size:'+str(i)+'x'+str(i)+', \u03C3:'+str(sigma)+')'), plt.xticks([]),plt.yticks([])
+            u += 1
+    plt.show()
+
+    i=1
+    for gaussKernel1 in gaussKernelSigma:
+        for gaussKernel2 in gaussKernel1:
+            plt.subplot(2,2,i), plt.imshow(gaussKernel2[i],'gray',vmin=0,vmax=255)
+            plt.xticks([]),plt.yticks([])
+            i += 1
+    plt.show()
+
+
+        

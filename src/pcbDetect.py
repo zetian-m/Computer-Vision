@@ -9,6 +9,7 @@ import cv2
 import PointOperator as POP
 import Illuminate as IL
 import Threshold as TH
+import MedianFilter as MF
 import os
 
 #############################################
@@ -43,7 +44,7 @@ class _GAUSSFILCONST(object):
         #9.3
         #0.93
         #1
-        return 5
+        return 1
     @constant
     def KERNELSIZE():
         return 5
@@ -83,17 +84,31 @@ if __name__ == "__main__":
 
     #kontrassImg = IL.Illuminate(originalImg, 5, 0.8)
 
+    #!! LowPass Median-Filter
+    medianImg = MF.medianFilter(originalImg, 7, CONVCONST.CONVMETHOD)
+    plt.subplot(121),plt.imshow(originalImg, cmap = 'gray')
+    plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+    plt.subplot(122),plt.imshow(medianImg, cmap = 'gray')
+    plt.title('Median Filtered Image'), plt.xticks([]), plt.yticks([])
+    plt.show()
+    
+
+    #!! High Pass - Threshold->Sobel und Canny
     gaKernel, gaImg = GAUSF.gaussFilter(originalImg , GAUSSFCONST.KERNELSIZE, GAUSSFCONST.SIGMA, CONVCONST.CONVMETHOD)
-    imgThreshold = TH.threshold(gaImg, 210, 50, 2)
-    imgThreshold = TH.threshold(imgThreshold, 190, 200, 3)
+    plt.imshow(gaImg , cmap = 'gray')
+    plt.show()
+    imgThreshold = TH.threshold(gaImg, 200, 50, 2)
+    plt.imshow(imgThreshold, cmap = 'gray')
+    plt.show()
 
-
-    
-    
     sobelGx, sobelGy, sobelImg = SOF.sobelFilter(imgThreshold, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
 
-    cannyImg = CANF.cannyFilter(imgThreshold, 10, 5, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
-
+    cannyImg = CANF.cannyFilter(imgThreshold, 5, 3, GAUSSFCONST.SIGMA, SOFCONST.KERNELSIZE, CONVCONST.CONVMETHOD)
+    """cv2.imwrite("Original.png", originalImg)
+    cv2.imwrite("ThresholdImg.png", imgThreshold)
+    cv2.imwrite("Sobel_PCB.png", sobelImg)
+    cv2.imwrite("Canny_PCB.png", cannyImg)
+"""
     plt.subplot(221),plt.imshow(originalImg, cmap = 'gray')
     plt.title('Original Image'), plt.xticks([]), plt.yticks([])
     plt.subplot(222),plt.imshow(imgThreshold, cmap = 'gray')
@@ -103,3 +118,8 @@ if __name__ == "__main__":
     plt.subplot(224),plt.imshow(cannyImg, cmap = 'gray')
     plt.title('Canny Filtered Image'), plt.xticks([]), plt.yticks([])
     plt.show()
+
+
+    
+
+
