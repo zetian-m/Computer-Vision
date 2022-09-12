@@ -32,7 +32,7 @@ if __name__ == "__main__":
     # create ideal low pass filter
     H = np.zeros((P, Q), dtype=np.float32)
 
-    D0 = 55
+    D0 = 25
     for u in range(P):
         for v in range(Q):
             D = np.sqrt((u-P/2)**2 + (v-Q/2)**2)
@@ -54,12 +54,19 @@ if __name__ == "__main__":
     # remove padding
     g = g_p[0:M, 0:N]
 
+    # filter in spatial domain
+    H_unshifted = np.fft.ifftshift(H)
+    h = np.real(np.fft.ifft2(H_unshifted))
+    h = np.fft.fftshift(h)
+
+    # intensity profile of center line 
+    intstyProfile = h[int(P/2), :]
+
     plt.figure(1)
     plt.subplot(121),plt.imshow(f, cmap = 'gray')
     plt.title('Input Image'), plt.xticks([]), plt.yticks([])
     plt.subplot(122),plt.imshow(Fshiftmag, cmap = 'gray')
     plt.title('Amplituden des Frequenzspektrums'), plt.xticks([]), plt.yticks([])
-    plt.show(),
 
     plt.figure(2)
     plt.subplot(121),plt.imshow(H, cmap = 'gray')
@@ -68,11 +75,16 @@ if __name__ == "__main__":
     plt.title('G[u, v]'), plt.xticks([]), plt.yticks([])
 
     plt.figure(3)
-    plt.subplot(111),plt.imshow(g, cmap = 'gray')
+    plt.subplot(121),plt.imshow(g, cmap = 'gray')
     plt.title('Gefiltertes Bild'), plt.xticks([]), plt.yticks([])
-    plt.show()
+    plt.subplot(122),plt.imshow(h, cmap = 'gray')
+    plt.title('Filter im Originalbereich'), plt.xticks([]), plt.yticks([])
 
     plt.figure(4)
+    plt.subplot(111),plt.plot(np.linspace(0,Q,Q), intstyProfile)
+    plt.title('Gefiltertes Bild'), plt.xticks([]), plt.yticks([])
+
+    plt.figure(5)
     ax = plt.subplot(projection='3d')
     u = np.linspace(0, P, P)
     v = np.linspace(0, Q, Q)
