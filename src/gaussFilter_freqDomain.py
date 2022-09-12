@@ -32,7 +32,7 @@ if __name__ == "__main__":
     # create ideal low pass filter
     H = np.zeros((P, Q), dtype=np.float32)
 
-    D0 = 25
+    D0 = 80
     for u in range(P):
         for v in range(Q):
             D = np.sqrt((u-P/2)**2 + (v-Q/2)**2)
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
     plt.figure(4)
     plt.subplot(111),plt.plot(np.linspace(0,Q,Q), intstyProfile)
-    plt.title('Gefiltertes Bild'), plt.xticks([]), plt.yticks([])
+    plt.title('Intensitätsprofil'), plt.xticks([]), plt.yticks([])
 
     plt.figure(5)
     ax = plt.subplot(projection='3d')
@@ -90,9 +90,16 @@ if __name__ == "__main__":
     v = np.linspace(0, Q, Q)
     U, V = np.meshgrid(u, v)
     ax.plot_surface(U, V, H)
-    ax.set_xlabel("u")
-    ax.set_ylabel("v")
-    ax.set_zlabel("H[u,v]")
+    ax.set_xlabel("u", fontsize=20, labelpad=1)
+    ax.set_ylabel("v", fontsize=20, labelpad=1)
+    ax.tick_params(axis='x', colors='white', labelsize=2)
+    ax.tick_params(axis='y', colors='white', labelsize=2)
+    ax.tick_params(axis='z', colors='white', labelsize=2)
+    #ax.axes.xaxis.set_ticks([])
+    #ax.axes.yaxis.set_ticks([])
+    #ax.axes.zaxis.set_ticks([])
+    ax.grid(True)
+    ax.set_zlabel("H[u,v]", fontsize=20, labelpad=1)
     plt.show()
 
 
