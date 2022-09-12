@@ -32,14 +32,12 @@ if __name__ == "__main__":
     # create ideal low pass filter
     H = np.zeros((P, Q), dtype=np.float32)
 
-    D0 = 100
+    D0 = 80
     for u in range(P):
         for v in range(Q):
             D = np.sqrt((u-P/2)**2 + (v-Q/2)**2)
-            if D <= D0:
-                H[u, v] = 1
-            else:
-                H[u, v] = 0
+            H[u, v] = 1 - math.exp(-(D**2)/(2*D0**2))
+
 
     # apply low pass filter
     G_shift = F_shift * H
@@ -70,13 +68,9 @@ if __name__ == "__main__":
     plt.subplot(122),plt.imshow(Fshiftmag, cmap = 'gray')
     plt.title('Amplituden des Frequenzspektrums'), plt.xticks([]), plt.yticks([])
 
-
     plt.figure(2)
-    ax = plt.subplot(121)
-    plt.imshow(H, cmap = 'gray')
+    plt.subplot(121),plt.imshow(H, cmap = 'gray')
     plt.title('H[u, v]'), plt.xticks([]), plt.yticks([])
-    ax.set_xlabel("u", fontsize=20, labelpad=1)
-    ax.set_ylabel("v", fontsize=20, labelpad=1)
     plt.subplot(122),plt.imshow(G_shiftmag, cmap = 'gray')
     plt.title('G[u, v]'), plt.xticks([]), plt.yticks([])
 
@@ -91,7 +85,6 @@ if __name__ == "__main__":
     plt.title('Intensitätsprofil'), plt.xticks([]), plt.yticks([])
 
     plt.figure(5)
-    #plt.rcParams['font.size'] = '16'
     ax = plt.subplot(projection='3d')
     u = np.linspace(0, P, P)
     v = np.linspace(0, Q, Q)
