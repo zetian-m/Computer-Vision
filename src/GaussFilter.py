@@ -26,7 +26,7 @@ def creatGaussKernel(kernelSize, sigma):
     #todo: Normalisation
     #todo: is this the right way?
     #kernel = kernel/np.linalg.norm(kernel)
-    gaussKernel /= np.sum(gaussKernel)
+    #gaussKernel /= np.sum(gaussKernel)
     
 
     #* Uncomment this for proving gauss kernel with opencv
