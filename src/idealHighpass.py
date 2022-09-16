@@ -32,7 +32,7 @@ if __name__ == "__main__":
     # create ideal high pass filter
     H = np.zeros((P, Q), dtype=np.float32)
 
-    D0 = 60
+    D0 = 200
     for u in range(P):
         for v in range(Q):
             D = np.sqrt((u-P/2)**2 + (v-Q/2)**2)
@@ -55,11 +55,14 @@ if __name__ == "__main__":
     # remove padding
     g = g_p[0:M, 0:N]
 
+    # set negative values to 0
+    g = np.where(g < 0, 0, g)
+
     # remove negative values
-    g = g - np.min(g)
+    #g = g - np.min(g)
 
     # scalue picture to 8 bytes
-    g = np.rint(255 * (g / np.max(g)))
+    #g = np.rint(255 * (g / np.max(g)))
 
     # convert filter in spatial domain
     H_unshifted = np.fft.ifftshift(H)
@@ -67,7 +70,7 @@ if __name__ == "__main__":
     h = np.fft.fftshift(h)
 
     # remove negative values
-    #h = h - np.min(h)
+    h = h - np.min(h)
 
     # scalue to 8 bytes
     #h = 255 * (h / np.max(h))
