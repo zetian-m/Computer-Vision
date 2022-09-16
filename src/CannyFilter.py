@@ -183,8 +183,7 @@ def cannyFilter(inputImg, sigma, upperThreshold, lowerThreshold, sobelKernelSize
     plt.show()"""
     
     #* Step 4: hysteresis Thresholding
-    EdgeGradient = cannyThreshold(newEdgeGradient, upperThreshold, lowerThreshold)
-
+    EdgeGradient = np.uint8(cannyThreshold(newEdgeGradient, upperThreshold, lowerThreshold))
     return EdgeGradient
 
 
