@@ -139,7 +139,6 @@ def convolution2D(image, kernel, convMethod):
     
     return resultImage
 
-
 def stopwatchStart():
     start = time.time()
     return start

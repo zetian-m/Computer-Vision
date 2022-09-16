@@ -3,7 +3,6 @@ import GaussFilter as GAUSF
 import SobelFilter as SOBF
 import matplotlib.pyplot as plt
 import numpy as np
-import cv2
 
 #* This canny filter was implemented with this website as tutorial: 
 #* https://pyimagesearch.com/2021/05/12/opencv-edge-detection-cv2-canny/
